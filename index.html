@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--Made with ❤ by XUANZHI-->
+<!--该页面已接入百度统计-->
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#e9f1e9">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2024HW倒计时</title>
+  <!-- Bootstrap -->
+  <link href="https://unpkg.zhimg.com/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body,
+    .main:before,
+    .glass:before {
+      background: url("./b.jpg") 0 / cover fixed;
+    }
+
+    .main {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 350px;
+      height: 600px;
+      line-height: 1;
+      margin: auto;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .6);
+      overflow: hidden;
+    }
+
+    .main:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      filter: blur(20px);
+      z-index: -1;
+      margin: -30px;
+    }
+
+    .glass {
+      line-height: 1;
+      margin: auto;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .6);
+      overflow: hidden;
+    }
+
+    .glass:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      filter: blur(20px);
+      z-index: -1;
+      margin: -30px;
+    }
+
+    .time {
+      color: gray;
+    }
+
+    .salary-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .salary-result {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?76d748872de14bad7ef88266420d87e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</head>
+
+<body>
+  <br class="brBefore">
+  <br class="brBefore">
+  <div class="container">
+    <div class="card glass">
+      <br>
+      <div class="container">
+        <br>
+    
+         <h5 class="text-right" id="weekDay"></h5>
+
+        <p class="text-center" style="display: none" id="saying">"<i><span id="saying-text"></span></i>"</p>
+        <br>
+        <div id="2333">
+          <h3 class="text-center" id="h">距离2024HW结束还有</h3>
+          <h1 class="text-center" id="day"></h1>
+          <h2 class="text-center" id="p"></h2>
+          <br>
+         
+          <h3 class="text-center" id="timeTo21"></h3>
+          <br>
+          <p class="text-center" id="elapsedDays"></p>
+          <br>
+        </div>
+        <div>
+          <input type="number" id="dailySalary" class="salary-input" placeholder="请输入每日薪资">
+          <p class="text-center salary-result" id="totalSalary"></p>
+        </div>
+        <br>
+      </div>
+      <br>
+    </div>
+  </div>
+  <br>
+  <br>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://unpkg.zhimg.com/jquery@3.5.0/dist/jquery.min.js"></script>
+  <script>
+    function tow(n) {
+      return n >= 0 && n < 10 ? '0' + n : '' + n;
+    }
+
+    function getDate() {
+      var oDate = new Date(); // 获取当前日期对象
+      var oldTime = oDate.getTime(); // 当前时间距离1970年的毫秒数
+      var newDate = new Date('2024/9/19 18:00:00');
+      var newTime = newDate.getTime(); // 2024年HW结束离1970年的毫秒数
+      var second = Math.floor((newTime - oldTime) / 1000); // 未来时间距离现在的秒数
+      var day = Math.floor(second / 86400); // 整数部分代表的是天
+      second = second % 86400; // 余数代表剩下的秒数
+      var hour = Math.floor(second / 3600); // 整数部分代表小时
+      second %= 3600; // 余数代表剩下的秒数
+      var minute = Math.floor(second / 60);
+      second %= 60;
+      
+      document.getElementById("day").innerHTML = tow(day) + '<span class="time">天</span>';
+      var str = tow(hour) + '<span class="time">小时</span>'
+        + tow(minute) + '<span class="time">分钟</span>'
+        + tow(second) + '<span class="time">秒</span>';
+      document.getElementById("p").innerHTML = str;
+
+      // 显示今天是星期几
+      var weekDays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+      var weekDay = weekDays[oDate.getDay()];
+      document.getElementById("weekDay").innerHTML = " 今天：" + weekDay;
+
+      // 计算离晚上21点还有多少小时
+      var targetTime = new Date();
+      targetTime.setHours(21, 0, 0, 0); // 设置为今天晚上21点
+      var timeTo21 = targetTime.getTime() - oldTime;
+      
+      // 如果已经过了21点，显示明天的21点
+      if (timeTo21 < 0) {
+        targetTime.setDate(targetTime.getDate() + 1);
+        timeTo21 = targetTime.getTime() - oldTime;
+      }
+
+      var hoursTo21 = Math.floor(timeTo21 / 3600000);
+      var minutesTo21 = Math.floor((timeTo21 % 3600000) / 60000);
+      var secondsTo21 = Math.floor((timeTo21 % 60000) / 1000);
+
+      document.getElementById("timeTo21").innerHTML = "离今晚21点还有 " + tow(hoursTo21) + "小时 " + tow(minutesTo21) + "分钟 " + tow(secondsTo21) + "秒";
+
+      // 计算已经过去了多少天
+      calculateElapsedDays();
+    }
+
+    function calculateElapsedDays() {
+      var startDate = new Date('2024/7/22');
+      var today = new Date();
+      var timeDifference = today - startDate;
+      var daysElapsed = Math.floor(timeDifference / (1000 * 60 * 60 * 24)) + 1; // 包括起始日
+      document.getElementById("elapsedDays").innerHTML = "HW已经过去了 " + daysElapsed + " 天";
+      calculateSalary(daysElapsed); // 计算薪资
+    }
+
+    function calculateSalary(daysElapsed) {
+      var dailySalary = document.getElementById('dailySalary').value;
+      if (dailySalary) {
+        var totalSalary = dailySalary * daysElapsed;
+        document.getElementById('totalSalary').innerHTML = "预计总薪资: ¥" + totalSalary.toLocaleString();
+      }
+    }
+
+    // 添加输入事件监听器
+    document.getElementById('dailySalary').addEventListener('input', function() {
+      calculateElapsedDays(); // 更新天数和薪资
+    });
+
+    var saying_list = [
+      "人在旅途，难免会遇到荆棘和坎坷，但风雨过后，一定会有美丽的彩虹。",
+      "要想改变命运，首先改变自己。",
+      "思路决定出路，气度决定高度，细节决定成败，性格决定命运。",
+      "没有退路的时候，正是潜力发挥最大的时候。",
+      "时间是个常数，但也是个变数。勤奋的人无穷多，懒惰的人无穷少。",
+      "时光是个宝，随时都在跑，任你去追逐，逝去又无踪，若要紧跟随，珍惜每一秒，发奋又图强，人生好荣光。",
+      "机遇是难求的，失去了就不会再来，把握好现有的机会，努力进取，那么你将会得到不菲的收获。",
+      "那些在困难面前能够坚持到底、努力奋进的人最终能够战胜一切困难，取得最后的成功。",
+      "环境和条件不是学习的决定因素，只有人的内因最重要，不能借口学习条件不好而不努力学习。",
+      "只顾眼前的利益，得到的只是短暂的欢愉；目标高远，但也要面对现实。把理想和现实结合起来，才有可能成功。",
+      "人们总是在努力珍惜未得到的，而遗忘了所拥有的。",
+      "我不去想是否能够成功，既然选择了远方，便只顾风雨兼程！",
+      "前有阻碍，奋力把它冲开，运用炙热的激情，转动心中的期待，血在澎湃，吃苦流汗算什么。",
+      "这个社会是存在不公平的，不要抱怨，因为没有用！人总是在反省中进步的！",
+      "我们什么都没有，唯一的本钱就是青春。梦想让我与众不同，奋斗让我改变命运！",
+      "永远不要埋怨你已经发生的事情，要么就改变它，要么就安静的接受它。",
+      "打磨着你的锐气，消耗着你的梦想，然后才能把一个足够圆滑的自己交给社会。",
+      "如果你坚信石头会开花，那么开花的不仅仅是石头。",
+      "不要把负能量看做是消极，仇恨。其实它的作用是激励，它其实是现实。",
+      "成功便是站起比倒下多一次。",
+      "成功就是你被击落到失望的深渊之后反弹得有多高。",
+      "没人扶你的时候，自己站直，路还长，背影要美。 "
+    ];
+
+    function sayings() {
+      return saying_list[Math.floor(Math.random() * saying_list.length)];
+    }
+
+    $("#saying-text").html(sayings());
+    $("#saying").fadeIn();
+    setInterval(function () {
+      $("#saying").fadeOut("slow", function () {
+        $("#saying-text").html(sayings());
+        $("#saying").fadeIn();
+      });
+    }, 10000);
+
+    // 初始加载
+    getDate();
+    setInterval(getDate, 500);
+  </script>
+</body>
+
+</html>
